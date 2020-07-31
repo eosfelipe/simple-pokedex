@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokedex</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+    .container {
+      width: 400px;
+      background-color: #f22625;
+      padding: 1em;
+      margin: 0 auto;
+      border-radius: 1em;
+      text-align: center;
+      color: white;
+      font-family: system-ui;
+    }
+    #nameId:first-letter {
+      text-transform: capitalize;
+    }
+    .sprite {
+      background-color: white;
+    }
+    input {
+      margin-top: 1em;
+      width: 100%;
+      border: none;
+      padding: 1em;
+      box-sizing: border-box;
+      border-radius: 1em;
+      box-shadow: inset 0 0 5px rgba(0,0,0,.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="nameId">Pikachu</h1>
+    <div class="sprite">
+      <img id="imgId" src="" alt="pikachu">
+    </div>
+    <input type="text" id="search" placeholder="Nombre o número de pokemon">
+  </div>
+
+  <script>
+    const getPokemon = async (id) => {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+      const data = await response.json();
+      return data;
+    };
+    const updatePokemon = async (poke) => {
+      const newPokemon = await getPokemon(poke);
+      window.nameId.innerHTML = newPokemon.name;
+      window.imgId.setAttribute('src', newPokemon.sprites.front_default);
+    };
+    document.addEventListener('DOMContentLoaded', async () => {
+      const pokemon = await getPokemon(150);
+      window.nameId.innerHTML = pokemon.name;
+      window.imgId.setAttribute('src', pokemon.sprites.front_default);
+    });
+    window.search.addEventListener('keypress', (e) => {
+      if(e.key === 'Enter'){
+      const v = window.search.value;
+      updatePokemon(v.trim().toLowerCase());
+      window.search.value = '';
+      }
+    });
+  </script>
+</body>
+</html>
